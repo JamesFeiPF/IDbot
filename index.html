@@ -237,6 +237,63 @@
   .dl .fine{margin-top:30px; font-size:13px; color:var(--dim)}
   .dl .fine a{color:var(--lime-dim)}
 
+  /* ---------- 实景 GIF ---------- */
+  .demo-split{display:grid; grid-template-columns:1.02fr .98fr; gap:56px; align-items:center}
+  .demo-stat{display:flex; gap:36px; margin-bottom:30px; flex-wrap:wrap}
+  .demo-stat div{font-family:var(--mono)}
+  .demo-stat b{display:block; font-size:32px; color:var(--lime); line-height:1.25; font-weight:700}
+  .demo-stat span{font-size:11.5px; letter-spacing:.16em; color:var(--dim)}
+  .demo-copy ul{list-style:none; margin:0 0 34px; border-top:1px solid var(--line)}
+  .demo-copy li{padding:14px 2px; border-bottom:1px solid var(--line); display:flex; gap:16px; align-items:baseline; font-size:15px; color:var(--dim); line-height:1.6}
+  .demo-copy li b{color:var(--fg); font-weight:800; min-width:104px; flex-shrink:0}
+  .demo-copy li code{font-family:var(--mono); color:var(--lime); font-size:13px; background:rgba(201,242,74,.07); padding:1px 7px}
+  .frame-wrap{justify-self:center; position:relative; max-width:368px; width:100%}
+  .demo-media{
+    position:relative; overflow:hidden;
+    background:linear-gradient(180deg,#0a0e0a,#060906);
+    border:1px solid rgba(201,242,74,.32);
+    box-shadow:0 44px 90px -42px rgba(0,0,0,.95), 0 0 70px -34px rgba(201,242,74,.3);
+  }
+  .demo-media img{
+    display:block; width:100%; height:auto;
+    /* 边缘柔化：左右轻褪、上缘多褪（配合线缆遮罩）、下缘只褪一丝保住写字内容 */
+    -webkit-mask-image:
+      linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, rgba(0,0,0,.4) 5%, #000 17%, #000 94%, transparent 100%);
+    mask-image:
+      linear-gradient(to right, transparent 0, #000 4%, #000 96%, transparent 100%),
+      linear-gradient(to bottom, transparent 0, rgba(0,0,0,.4) 5%, #000 17%, #000 94%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-composite: intersect;
+  }
+  .veil-top{
+    position:absolute; inset:0 0 auto 0; height:40%; pointer-events:none; z-index:2;
+    backdrop-filter:blur(7px) brightness(.84) saturate(.85);
+    -webkit-backdrop-filter:blur(7px) brightness(.84) saturate(.85);
+    background:linear-gradient(180deg, rgba(7,10,8,.75) 0%, rgba(7,10,8,.3) 58%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom, #000 0%, #000 28%, transparent 100%);
+    mask-image:linear-gradient(to bottom, #000 0%, #000 28%, transparent 100%);
+  }
+  .veil-edge{
+    position:absolute; inset:0; pointer-events:none; z-index:2;
+    background:
+      radial-gradient(125% 112% at 50% 62%, transparent 54%, rgba(6,9,6,.9) 100%),
+      linear-gradient(90deg, rgba(6,9,6,.5), transparent 9%, transparent 91%, rgba(6,9,6,.5));
+  }
+  .demo-media .corner{position:absolute; width:22px; height:22px; border:2px solid var(--lime); z-index:4}
+  .c-tl{top:-1px; left:-1px; border-right:none; border-bottom:none}
+  .c-br{bottom:-1px; right:-1px; border-left:none; border-top:none}
+  .hud{
+    position:absolute; z-index:4; font-family:var(--mono); font-size:11.5px;
+    letter-spacing:.14em; display:flex; gap:8px; align-items:center;
+    color:rgba(232,240,226,.92); text-shadow:0 1px 6px rgba(0,0,0,.8);
+  }
+  .hud.tl{top:14px; left:16px}
+  .hud.br{bottom:14px; left:16px; color:var(--lime)}
+  .hud .dot{width:8px; height:8px; border-radius:50%; background:#ff5f56; box-shadow:0 0 8px #ff5f56; animation:blink 1.4s steps(2) infinite}
+  .cap{margin-top:14px; text-align:center; font-family:var(--mono); font-size:12.5px; color:var(--dim); letter-spacing:.08em}
+  .cap code{color:var(--lime)}
+
   /* ---------- footer ---------- */
   footer{border-top:1px solid var(--line); padding:40px 0 56px; position:relative; z-index:1}
   .foot{display:flex; justify-content:space-between; gap:24px; flex-wrap:wrap; font-family:var(--mono); font-size:13px; color:var(--dim); letter-spacing:.05em}
@@ -245,7 +302,7 @@
 
   @media(max-width:960px){
     .cards,.crowd{grid-template-columns:1fr 1fr}
-    .split{grid-template-columns:1fr}
+    .split,.demo-split{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
     .step{border-right:none; border-bottom:1px dashed var(--line)}
     .traj-box{display:none}
@@ -270,6 +327,7 @@
   <div class="nav-in">
     <a class="logo" href="#"><i></i>ID<b>bot</b></a>
     <div class="nav-links">
+      <a href="#demo">实景</a>
       <a href="#power">能力</a>
       <a href="#api">接口</a>
       <a href="#crowd">适合谁</a>
@@ -300,7 +358,8 @@
       <span>Y <b id="ry">000.0</b></span>
       <span>Z <b id="rz">000.0</b></span>
       <span>MODE <b>G01</b></span>
-      <span>TESTS <b>97/97</b></span>
+      <span>Z-MIN <b>110</b></span>
+      <span>TESTS <b>101/101</b></span>
     </div>
 
     <div class="traj-box" aria-hidden="true">
@@ -334,12 +393,48 @@
   <div class="ticker-in">
     <b>write_hanzi()</b><i>//</i>汉字书写 · 9574 字库<i>//</i><b>move_line()</b><i>//</i>G01 直线插补<i>//</i>
     <b>画板描图</b><i>//</i>鼠标即笔<i>//</i><b>抓取操控</b><i>//</i>夹爪闭环<i>//</i><b>Web 控制台</b><i>//</i>四插件<i>//</i>
-    <b>97 项测试</b><i>//</i><b>设备授权</b><i>//</i><b>安全限位</b><i>//</i><b>G/M 全指令集</b><i>//</i>
+    <b>101 项测试</b><i>//</i><b>设备授权</b><i>//</i><b>安全限位 Z≥110</b><i>//</i><b>G/M 全指令集</b><i>//</i>
     <b>write_hanzi()</b><i>//</i>汉字书写 · 9574 字库<i>//</i><b>move_line()</b><i>//</i>G01 直线插补<i>//</i>
     <b>画板描图</b><i>//</i>鼠标即笔<i>//</i><b>抓取操控</b><i>//</i>夹爪闭环<i>//</i><b>Web 控制台</b><i>//</i>四插件<i>//</i>
-    <b>97 项测试</b><i>//</i><b>设备授权</b><i>//</i><b>安全限位</b><i>//</i><b>G/M 全指令集</b><i>//</i>
+    <b>101 项测试</b><i>//</i><b>设备授权</b><i>//</i><b>安全限位 Z≥110</b><i>//</i><b>G/M 全指令集</b><i>//</i>
   </div>
 </div>
+
+<section id="demo">
+  <div class="wrap">
+    <div class="sec-tag reveal">Live Footage</div>
+    <h2 class="reveal">看它，把一个字<br>稳稳写出来</h2>
+    <p class="sec-sub reveal">真实运行录制、未加速：按笔顺逐笔书写，抬笔平移不拖墨，落笔行线一气呵成。</p>
+    <div class="demo-split">
+      <div class="demo-copy reveal">
+        <div class="demo-stat">
+          <div><b>9574</b><span>HANZI 字库</span></div>
+          <div><b>12.6s</b><span>循环实录</span></div>
+          <div><b>0.1mm</b><span>回位精度</span></div>
+        </div>
+        <ul>
+          <li><b>笔顺还原</b><span>按汉字笔画顺序书写，<code>medians</code> 矢量轨迹逐笔执行</span></li>
+          <li><b>防拖墨过渡</b><span>抬笔 → 等高平移 → 垂直落笔，全程 <code>G01</code> 直线</span></li>
+          <li><b>防侧翻限位</b><span>Z 高度硬性 <code>≥110mm</code>，越界指令发送前即拒绝</span></li>
+          <li><b>三行开写</b><span>连接 → 归零 → <code>write_hanzi("字", x, y)</code></span></li>
+        </ul>
+        <a class="btn btn-main" href="https://github.com/JamesFeiPF/IDbot/releases/download/v0.2.2/IDbot-0.2.2-py313-win_amd64.zip">⬇ 下载，让它写起来</a>
+      </div>
+      <div class="frame-wrap reveal">
+        <div class="demo-media">
+          <img src="assets/hanzi-writing.gif" alt="IDbot 机械臂正在书写汉字的实景录制" width="340" height="671" loading="lazy" decoding="async">
+          <div class="veil-top"></div>
+          <div class="veil-edge"></div>
+          <div class="hud tl"><span class="dot"></span>REC · REALTIME</div>
+          <div class="hud br">write_hanzi()</div>
+          <span class="corner c-tl"></span>
+          <span class="corner c-br"></span>
+        </div>
+        <div class="cap">实景录制 · 12.6s 循环 · <code>Z≥110</code> 安全作业</div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="power">
   <div class="wrap">
@@ -399,7 +494,7 @@ bot.<span class="k">home</span>()                     <span class="c"># 归零 G
 bot.<span class="k">write_hanzi</span>(<span class="s">"你好世界"</span>, x<span class="o">=</span><span class="n">-80</span>, y<span class="o">=</span><span class="n">200</span>)
 
 <span class="c"># 3) 让它走直线 / 画曲线</span>
-bot.<span class="k">move_line</span>(x<span class="o">=</span><span class="n">200</span>, y<span class="o">=</span><span class="n">150</span>, z<span class="o">=</span><span class="n">50</span>)
+bot.<span class="k">move_line</span>(x<span class="o">=</span><span class="n">200</span>, y<span class="o">=</span><span class="n">150</span>, z<span class="o">=</span><span class="n">150</span>)
 pos <span class="o">=</span> bot.<span class="k">query_position</span>()
 <span class="o">print</span>(pos.x, pos.y, pos.z)<span class="cursor"></span></pre>
       </div>
@@ -520,7 +615,7 @@ pos <span class="o">=</span> bot.<span class="k">query_position</span>()
   setInterval(() => {
     px = Math.max(-260, Math.min(260, px + (Math.random() - 0.5) * 46));
     py = Math.max(70, Math.min(265, py + (Math.random() - 0.5) * 40));
-    pz = Math.max(0, Math.min(285, pz + (Math.random() - 0.5) * 22));
+    pz = Math.max(110, Math.min(285, pz + (Math.random() - 0.5) * 22));
     rx.textContent = px.toFixed(1).padStart(6, '0');
     ry.textContent = py.toFixed(1).padStart(6, '0');
     rz.textContent = pz.toFixed(1).padStart(6, '0');
